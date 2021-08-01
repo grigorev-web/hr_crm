@@ -6,6 +6,7 @@ import { useReducer } from "react";
 import { reducer } from "./store/reducer";
 import { initialState } from "./store/initialState";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Recruter from "./components/Recruter";
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -28,7 +29,7 @@ export default function App() {
             <Table persons={state.persons} />
           </Route>
           <Route path="/recruter">
-            <p>Recruter</p>
+            <Recruter />
           </Route>
           <Route path="/admin">
             <p>Admin</p>
