@@ -5,21 +5,25 @@ import {
   FaHeadset,
   FaSignOutAlt,
   FaTimes,
-  FaUser,
   FaUserCircle,
   FaUsers,
   FaUserShield
 } from "react-icons/fa";
-import { reducer } from "../store/reducer";
+//import { reducer } from "../store/reducer";
 import OutsideAlerter from "./OutsideAlerter";
 import msContactLogo from "../static/img/favicon.png";
 import { Link, useLocation } from "react-router-dom";
-import usePageViews from "./usePageViews";
-import { useEffect } from "react";
+
+import { useEffect,useContext } from "react";
+import { ContextApp } from '../store/ContextApp';
+import {homepage} from "./homepage";
 
 export default function SideMenu(props) {
+
+  const {state,dispatch} = useContext(ContextApp);
+
   const MenuBars = () => {
-    if (!!props.active) {
+    if (!!state.sideMenu.active) {
       return <FaTimes className="menu-toggle-btn" />;
     } else {
       return <FaBars className="menu-toggle-btn" />;
@@ -28,16 +32,16 @@ export default function SideMenu(props) {
 
   let location = useLocation();
   useEffect(() => {
-    // console.log("location", location, "props", props);
-    if (props.active) props.setSideMenuInactive();
+
+    if (state.sideMenu.active) dispatch({ type: "SET_SIDE_MENU_INACTIVE" });
   }, [location]);
 
   return (
-    <OutsideAlerter clickOutsideMenu={props.clickOutsideMenu}>
-      <div className={`side-menu ${props.active ? "active" : ""}`}>
+    <OutsideAlerter >
+      <div className={`side-menu ${state.sideMenu.active ? "active" : ""}`}>
         <div
           className="menu-toggle-btn-wrapper"
-          onClick={props.onToggleMenuBtn}
+          onClick={ () => dispatch({ type: "TOGGLE_SIDE_MENU" }) }
         >
           <MenuBars />
         </div>
@@ -50,37 +54,38 @@ export default function SideMenu(props) {
         <div className="menu-body">
           <div className="menu-user">
             <FaUserCircle className="menu-user-logo" />
-            <div className="menu-user-name">Григорьев Д.В.</div>
-            <div className="menu-user-role">Оператор</div>
+            <div className="menu-user-name">{state.login}</div>
+            <div className="menu-user-role">{state.role}</div>
           </div>
-          <Link onClick={() => console.log("link operator")} to="/operator">
+          <Link to={`${homepage}/operator`}>
             <p>
               <FaHeadset className="menu-icon" /> <span>Оператор</span>
             </p>
           </Link>
-          <Link to="/recruter">
+          <Link to={`${homepage}/recruter`}>
             <p>
               <FaUsers className="menu-icon" /> <span>Рекрутер</span>
             </p>
           </Link>
-          <Link to="/admin">
+          <Link to={`${homepage}/admin`}>
             <p>
               <FaUserShield className="menu-icon" /> <span>Администратор</span>
             </p>
           </Link>
-          <Link to="/stat">
+          <Link to={`${homepage}/stat`}>
             <p>
               <FaChartPie className="menu-icon" /> <span>Статистка</span>
             </p>
           </Link>
-          <Link to="/settings">
+          <Link to={`${homepage}/settings`}>
             <p>
               <FaCog className="menu-icon" /> <span>Настройки</span>
             </p>
           </Link>
-          <Link to="/logout">
-            <p>
-              <FaSignOutAlt className="menu-icon" /> <span>Выйти</span>
+          <Link to={`${homepage}/logout`}>
+            <p onClick={ ()=>dispatch({type:"LOGOUT"})}>
+              <FaSignOutAlt className="menu-icon"/>
+              <span>Выйти</span>
             </p>
           </Link>
         </div>

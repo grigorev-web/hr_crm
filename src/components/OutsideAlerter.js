@@ -1,4 +1,6 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useContext } from "react";
+
+import { ContextApp } from '../store/ContextApp';
 import PropTypes from "prop-types";
 
 /**
@@ -27,8 +29,11 @@ function useOutsideAlerter(ref, clickOutsideMenu) {
  * Component that alerts if you click outside of it
  */
 function OutsideAlerter(props) {
+
+  const {state,dispatch} = useContext(ContextApp);
+
   const wrapperRef = useRef(null);
-  useOutsideAlerter(wrapperRef, props.clickOutsideMenu);
+  useOutsideAlerter(wrapperRef, () => dispatch({ type: "CLICK_OUTSIDE_MENU" }));
 
   return <div ref={wrapperRef}>{props.children}</div>;
 }

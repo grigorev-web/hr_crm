@@ -2,7 +2,7 @@ export let persons = [
   {
     id: 1,
     phone: "9770001123",
-    name: "Иванов Петр Алексеевич aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    name: "Иванов Петр Алексеевичaaaaaaaaaaaaaaaaaaaaa",
     source: "hh",
     city: "Нижний Новогород",
     comment: "предложить СЗ"

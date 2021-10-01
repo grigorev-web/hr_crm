@@ -1,50 +1,62 @@
 import "./styles.css";
 import SideMenu from "./components/SideMenu";
-import Table from "./components/Table";
+import Operator from "./components/Operator/";
+import Recruter from "./components/Recruter/";
+import LoginForm from "./components/LoginForm";
+import Statistics from "./components/Statistics/";
+import {homepage} from "./components/homepage";
+import Modal from './components/Modal';
+import ModalChangeHR from './components/ModalChangeHR';
+import SideInfo from "./components/SideInfo";
 
-import { useReducer } from "react";
+import { useReducer} from "react";
 import { reducer } from "./store/reducer";
+import {ContextApp} from "./store/ContextApp";
 import { initialState } from "./store/initialState";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Recruter from "./components/Recruter";
+
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  let shadowClass = state.appShadow ? "shading" : "";
+  //console.log("state process.env",state.environment)
+
+  // Если не авторизован
+  if (!state.login) return <LoginForm state={state} dispatch={dispatch}/>
+
   return (
+    <ContextApp.Provider value={{dispatch, state}}>
     <Router>
-      <div className={`App container ${shadowClass}`}>
-        <SideMenu
-          clickOutsideMenu={() => dispatch({ type: "CLICK_OUTSIDE_MENU" })}
-          setSideMenuInactive={() =>
-            dispatch({ type: "SET_SIDE_MENU_INACTIVE" })
-          }
-          active={state.sideMenu.active}
-          onToggleMenuBtn={() => dispatch({ type: "TOGGLE_SIDE_MENU" })}
-        />
+      <div className={`App container ${state.appShadow ? "shading" : ""}`}>
+
+        <SideMenu/>
 
         <Switch>
-          <Route path="/operator">
-            <Table persons={state.persons} />
+          <Route path={`${homepage}/operator`}>
+            <Operator/>
           </Route>
-          <Route path="/recruter">
+          <Route path={`${homepage}/recruter`}>
             <Recruter />
           </Route>
-          <Route path="/admin">
+          <Route path={`${homepage}/admin`}>
             <p>Admin</p>
           </Route>
-          <Route path="/stat">
-            <p>Statistics</p>
+          <Route path={`${homepage}/stat`}>
+            <Statistics/>
           </Route>
-          <Route path="/settings">
+          <Route path={`${homepage}/settings`}>
             <p>Settings</p>
           </Route>
-          <Route path="/logout">
+          <Route path={`${homepage}/logout`}>
             <p>Logout</p>
           </Route>
         </Switch>
+        {state.modalTime ? <Modal/> : ''}
+        {state.modalChangeHR.show ? <ModalChangeHR/> : ''}
+        <SideInfo/>
+
       </div>
     </Router>
+    </ContextApp.Provider>
   );
 }
